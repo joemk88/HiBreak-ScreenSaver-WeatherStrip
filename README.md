@@ -25,7 +25,8 @@ Plus the files from this project: `weather_strip.py`, `run_weather.sh`, and `Run
 ---
 
 <img width="1648" height="1648" alt="WeatherStripDemo" src="https://github.com/user-attachments/assets/2e5c49f6-04c8-4c7c-93a9-a6bceb7f70cd" />
-Screenshots of WeatherStrip stamped in colour and mono on a BigMe HiBreak Pro with the KOreader plugin 
+
+Screenshots of WeatherStrip stamped in colour and mono on a BigMe HiBreak Pro with the KOreader plugin [CustomisableSleepScreen](https://github.com/joemk88/customisablesleepscreen.koplugin) 
 
 ---
 
