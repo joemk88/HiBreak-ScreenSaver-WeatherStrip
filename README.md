@@ -83,7 +83,7 @@ The imported task ("Run Weather Script") already has every action wired up and p
 **After importing, open the task and check the first three actions:**
 - `%Cover1` → your screensaver image path (default `/sdcard/screensaver.jpg`).
 - `%Font` → by default on DroidSansMono.ttf, or pick another font name *(search your phone's available fonts on Temux with: `ls /system/fonts/` )*.
-- `%Icons` → `colour` for Glyphs Poly, or blank / `mono` for monochrome.
+- `%Icons` → `colour` for Glyphs Poly, or  `mono` for monochrome.
 
 ### Schedule it — every 2 hours
 
@@ -100,8 +100,8 @@ Done — it now refreshes every 2 hours through the day.
 Six actions, in order:
 
 1. **Variables → Variable Set** — `%Cover1` = `/sdcard/screensaver.jpg`
-2. **Variables → Variable Set** — `%Font` = *(blank, or a font)*
-3. **Variables → Variable Set** — `%Icons` = *(blank/`mono`, or `colour`)*
+2. **Variables → Variable Set** — `%Font` = *(DroidSansMono.tff, or another font)*
+3. **Variables → Variable Set** — `%Icons` = *(`mono`, or `colour`)*
 4. **Location → Get Location v2**  *(produces `%gl_coordinates`)*
 5. **Variables → Variable Split** — `%gl_coordinates`, splitter `,`
 6. **Plugin → Termux:Tasker** — Executable `run_weather.sh`, Arguments `%gl_coordinates1 %gl_coordinates2 %Cover1 %Font %Icons`, terminal session **OFF**.
