@@ -125,6 +125,23 @@ If a new block appears on its own every 2 hours, it's working. Termux does **not
 
 ---
 
+Part 4 — Permissions & battery (do this or it stops firing)
+
+Tasker wakes Termux in the background every 2 hours, and Android will kill that unless you exempt the apps. Set all of the following for all three apps — Termux, Termux:Tasker, and Tasker. Wording varies by Android build; the intent is what matters.
+
+1. Phone Settings → Battery → App battery usage → Apps → (app) → Battery → Unrestricted. Do this for Termux, Termux:Tasker, and Tasker.
+
+2. Phone Settings → App Background Refresh → Toggle ON for Termux, Termux:Tasker, and Tasker.
+
+4. App info for each app → Enable all permissions + Allow Display over other Apps + Allow modify system settings + Allow Install Unknown Apps
+
+4. Let Tasker run commands in Termux Two parts:
+
+In Termux you already enabled external apps in Part 1 (allow-external-apps = true → termux-reload-settings).
+The first time the task runs the Termux action, Android pops “Allow Termux:Tasker to run commands in Termux?” — tap Allow. If you missed it: Settings → Apps → Termux:Tasker (and Tasker) → Permissions → enable the Termux “Run commands” permission (com.termux.permission.RUN_COMMAND).
+
+---
+
 ## Other tweaks (in `weather_strip.py`)
 
 Near the top of `draw_dashboard()`:
