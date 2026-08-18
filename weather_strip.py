@@ -29,7 +29,7 @@ from PIL import Image, ImageDraw, ImageFont
 # ---- config -----------------------------------------------------------------
 # Location comes from Tasker (LAT/LON via env or argv). If absent, we pin to
 # these defaults -- no termux-location, no Termux:API.
-DEFAULT_LAT, DEFAULT_LON, DEFAULT_LABEL = -33.869, 151.209, "Sydney"
+DEFAULT_LAT, DEFAULT_LON, DEFAULT_LABEL = -33.869, 151.208, "Sydney"
 UA = os.environ.get("UA", "bigme-weather-strip/1.0 (github.com/joemk88)")
 
 COVER = os.environ.get("COVER", "/sdcard/cover.jpg")   # MUST match coverprogress + com.xrz.standby (lowercase)
