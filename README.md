@@ -82,7 +82,7 @@ The imported task ("Run Weather Script") already has every action wired up and p
 
 **After importing, open the task and check the first three actions:**
 - `%Cover1` → your screensaver image path (default `/sdcard/screensaver.jpg`).
-- `%Font` → blank for Droid Sans Mono, or a font name *(search your phone's available fonts on Temux with: `ls /system/fonts/` )*.
+- `%Font` → by default on DroidSansMono.ttf, or pick another font name *(search your phone's available fonts on Temux with: `ls /system/fonts/` )*.
 - `%Icons` → `colour` for Glyphs Poly, or blank / `mono` for monochrome.
 
 ### Schedule it — every 2 hours
