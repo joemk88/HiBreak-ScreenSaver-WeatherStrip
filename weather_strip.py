@@ -5,7 +5,7 @@ Stamps a monochrome weather band onto the top 1/5 of the Bigme screensaver
 cover (/sdcard/Cover.jpg) and writes it back atomically.
 
 Location-aware: uses termux-location (network provider) to follow you, with a
-cached last-known fix and a hardcoded Blacktown fallback, so scheduled runs
+cached last-known fix and a hardcoded Sydney fallback, so scheduled runs
 with the screen off still produce a sensible band. Place name is reverse-
 geocoded (keyless) and cached so a stationary phone skips that call.
 
@@ -29,7 +29,7 @@ from PIL import Image, ImageDraw, ImageFont
 # ---- config -----------------------------------------------------------------
 # Location comes from Tasker (LAT/LON via env or argv). If absent, we pin to
 # these defaults -- no termux-location, no Termux:API.
-DEFAULT_LAT, DEFAULT_LON, DEFAULT_LABEL = -33.769, 150.906, "Blacktown"
+DEFAULT_LAT, DEFAULT_LON, DEFAULT_LABEL = -33.869, 151.209, "Sydney"
 UA = os.environ.get("UA", "bigme-weather-strip/1.0 (github.com/joemk88)")
 
 COVER = os.environ.get("COVER", "/sdcard/cover.jpg")   # MUST match coverprogress + com.xrz.standby (lowercase)
