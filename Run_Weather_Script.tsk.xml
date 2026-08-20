@@ -94,7 +94,7 @@ Time in milliseconds that it took for Tasker to get the location&lt;/_array_net.
 		<Action sr="act4" ve="7">
 			<code>590</code>
 			<Str sr="arg0" ve="3">%gl_coordinates</Str>
-			<Str sr="arg1" ve="3">, </Str>
+			<Str sr="arg1" ve="3">,</Str>
 			<Int sr="arg2" val="0"/>
 			<Int sr="arg3" val="0"/>
 		</Action>
