@@ -5,7 +5,7 @@ Stamps a monochrome weather band onto the top 1/5 of the Bigme screensaver
 cover (/sdcard/Cover.jpg) and writes it back atomically.
 
 Location-aware: uses termux-location (network provider) to follow you, with a
-cached last-known fix and a hardcoded Sydney fallback, so scheduled runs
+cached last-known fix and a hardcoded Blacktown fallback, so scheduled runs
 with the screen off still produce a sensible band. Place name is reverse-
 geocoded (keyless) and cached so a stationary phone skips that call.
 
@@ -29,7 +29,7 @@ from PIL import Image, ImageDraw, ImageFont
 # ---- config -----------------------------------------------------------------
 # Location comes from Tasker (LAT/LON via env or argv). If absent, we pin to
 # these defaults -- no termux-location, no Termux:API.
-DEFAULT_LAT, DEFAULT_LON, DEFAULT_LABEL = -33.869, 151.208, "Sydney"
+DEFAULT_LAT, DEFAULT_LON, DEFAULT_LABEL = -33.769, 150.906, "Blacktown"
 UA = os.environ.get("UA", "bigme-weather-strip/1.0 (github.com/joemk88)")
 
 COVER = os.environ.get("COVER", "/sdcard/cover.jpg")   # MUST match coverprogress + com.xrz.standby (lowercase)
@@ -41,7 +41,9 @@ TIMEOUT = 15                # http timeout (s)
 # Blank -> Droid Sans Mono. See the README for common Bigme fonts.
 def _resolve_font(choice):
     choice = (choice or "").strip()
-    if not choice:
+    # "default"/"mono"/blank/space/unexpanded %var  ->  use the default font.
+    # (Tasker won't accept a truly empty field, so users type "default".)
+    if not choice or choice.startswith("%") or choice.lower() in ("default", "mono", "none", "-"):
         return None
     if "/" in choice:
         return choice
@@ -65,17 +67,24 @@ ICON_STYLE = "colour" if os.environ.get("ICONS", "").strip().lower() in ("colour
 
 # ---- location (from Tasker GPS; else pinned default) ------------------------
 def get_location():
-    """(lat, lon, label). Tasker passes LAT/LON via env or as argv[1] argv[2].
-    PLACE (env) optionally overrides the label; otherwise the default is used."""
+    """(lat, lon, label). Accepts coordinates from Tasker as either two args
+    (lat lon) OR a single "lat,lon" string, so it works even if Tasker's
+    Variable Split doesn't fire. LAT/LON env override; PLACE overrides the label."""
     lat = os.environ.get("LAT")
     lon = os.environ.get("LON")
-    if (not lat or not lon) and len(sys.argv) >= 3:
-        lat, lon = sys.argv[1], sys.argv[2]
+    if (not lat or not lon) and len(sys.argv) >= 2:
+        a1 = sys.argv[1]
+        if "," in a1:                                  # "lat,lon" in one arg
+            parts = a1.split(",")
+            if len(parts) >= 2:
+                lat, lon = parts[0], parts[1]
+        elif len(sys.argv) >= 3:                       # lat and lon as separate args
+            lat, lon = a1, sys.argv[2]
     if lat and lon:
         try:
-            return float(lat), float(lon), os.environ.get("PLACE")
+            return float(str(lat).strip()), float(str(lon).strip()), os.environ.get("PLACE")
         except ValueError:
-            print("bad LAT/LON supplied, using default", file=sys.stderr)
+            print(f"bad LAT/LON supplied ({lat!r}, {lon!r}), using default", file=sys.stderr)
     return DEFAULT_LAT, DEFAULT_LON, os.environ.get("PLACE") or DEFAULT_LABEL
 
 
@@ -110,6 +119,24 @@ def get_weather(lat, lon):
         "clouds":   c["cloud_cover"],
         "humidity": c["relative_humidity_2m"],
     }, None
+
+
+def reverse_geocode(lat, lon):
+    """Suburb/town name for coords via OpenStreetMap Nominatim (free, keyless).
+    Returns a name or None. Used only when no PLACE is passed in."""
+    try:
+        url = ("https://nominatim.openstreetmap.org/reverse"
+               f"?format=jsonv2&lat={lat}&lon={lon}&zoom=14&addressdetails=1")
+        req = urllib.request.Request(url, headers={"User-Agent": UA})
+        with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+            a = json.load(r).get("address", {})
+        for k in ("suburb", "neighbourhood", "town", "city", "municipality",
+                  "village", "hamlet", "county", "state"):
+            if a.get(k):
+                return a[k]
+    except Exception as e:
+        print(f"reverse geocode failed: {e}", file=sys.stderr)
+    return None
 
 
 def date_label(t=None):
@@ -1003,7 +1030,7 @@ def main():
     lat, lon, place = get_location()
     try:
         weather, _ = get_weather(lat, lon)
-        place = place or DEFAULT_LABEL
+        place = place or reverse_geocode(lat, lon) or DEFAULT_LABEL
     except (urllib.error.URLError, KeyError, IndexError, TypeError, ValueError, TimeoutError) as e:
         print(f"weather fetch failed, leaving cover untouched: {e}", file=sys.stderr)
         sys.exit(1)
