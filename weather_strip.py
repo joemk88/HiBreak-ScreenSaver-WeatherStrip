@@ -1222,7 +1222,7 @@ def main():
     os.replace(tmp, COVER2)
 
     # Now copy the completed cover2.jpg over the watched cover.jpg. Keeping
-    # cover2.jpg as a complete, separate file avoids the screensaver seeing a
+    # cover2.jpg as a complete, separate file avoids the screensaver seeing a 
     # partially-written cover and gives the folder watcher a clean cover.jpg
     # replacement to notice.
     subprocess.run(["cp", COVER2, COVER], check=True)
